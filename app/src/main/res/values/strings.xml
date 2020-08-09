@@ -3,4 +3,5 @@
     <string name="baseUrl"></string>
     <string name="title_activity_news">News</string>
     <string name="title_activity_full_news">FullNews</string>
+    <string name="api_key">API_KEY</string>
 </resources>

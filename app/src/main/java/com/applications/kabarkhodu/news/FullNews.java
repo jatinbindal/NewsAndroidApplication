@@ -44,7 +44,6 @@ public class FullNews extends AppCompatActivity {
         //progressBar.setIndeterminateDrawable(R.draw;
 
 
-
     }
 
     public class myWebClient extends WebViewClient {

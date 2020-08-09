@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SourceAdapter.Ite
 
 
     private ProgressDialog bar;
-    RecyclerView.LayoutManager mLayoutManager=new LinearLayoutManager(this);
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
 
     private final String KEY_RECYCLER_STATE = "recycler_state";
 
@@ -48,161 +48,82 @@ public class MainActivity extends AppCompatActivity implements SourceAdapter.Ite
     //private ArticleAdapter adapter;
     private SourceAdapter adapter;
     TextView text;
-    ImageView img;
-    private static final String apiKey="a6580ddc35504d7fad7244f65e3c0977";
-    private  static final String s="the-next-web";
+    private String apiKey;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        //Toast.makeText(this,"OnCreate",Toast.LENGTH_SHORT).show();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        apiKey  = getString(R.string.api_key);
 
         NetworkInfo info = (NetworkInfo) ((ConnectivityManager)
                 this.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
 
-        //text= (TextView) findViewById(R.id.check);
-        img= (ImageView) findViewById(R.id.img);
-
-        recyclerView= (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(mLayoutManager);
 
 
-        bar=new ProgressDialog(this);
+        bar = new ProgressDialog(this);
         bar.setMessage("Fetching News Sources.....");
         bar.show();
-        if(savedInstanceState!=null)
-        {
+        if (savedInstanceState != null) {
             recyclerView.setAdapter(adapter);
         }
-        if (info == null)
-        {
-            Toast.makeText(this,"Please Connect to Internet and Refresh",Toast.LENGTH_LONG).show();
-            /*AlertDialog.Builder builder;
-            builder = new AlertDialog.Builder(this);
-            builder.setMessage("Connect to wifi or quit")
-                    .setCancelable(false)
-                    .setPositiveButton("Connect to WIFI", new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                        }
-                    })
-                    .setNegativeButton("Quit", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            finish();
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-*/
+        if (info == null) {
+            Toast.makeText(this, "Please Connect to Internet and Refresh", Toast.LENGTH_LONG).show();
             bar.dismiss();
         }
 
-        final Context c=this;
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
-        SourceList sourceList;
-        //SourceList list= apiService.loadSources();
-
-        Call<SourceList> call = apiService.loadSources();
-       // Response<SourceList> response =call.execute();
-        call.enqueue(new Callback<SourceList>() {
+        Call<SourceList> newsSourceCall = apiService.loadSources();
+        newsSourceCall.enqueue(new Callback<SourceList>() {
             @Override
-            public void onResponse(Call<SourceList>call, Response<SourceList> response) {
-                int statuscode=response.code();
-                //SourceList sourceList=new SourceList();
-                 SourceList sourceList= response.body();
-                adapter = new SourceAdapter(sourceList.sources,getApplicationContext());
-                adapter.setItemClickCallback(new SourceAdapter.ItemClickCallback() {
+            public void onResponse(Call<SourceList> call, Response<SourceList> response) {
 
-                    @Override
-                    public void onItemClick(String id) {
-                        adapter.setItemClickCallback(this);
-                        Intent intent =new Intent(getApplicationContext(),News.class);
-                        intent.putExtra("id",id);
+                if (response.code() == 200) {
+                    SourceList sourceList = response.body();
+                    adapter = new SourceAdapter(sourceList.sources, getApplicationContext());
+                    adapter.setItemClickCallback(new SourceAdapter.ItemClickCallback() {
 
-
-                        startActivity(intent);
-                    }
-                });
+                        @Override
+                        public void onItemClick(String id) {
+                            adapter.setItemClickCallback(this);
+                            Intent intent = new Intent(getApplicationContext(), News.class);
+                            intent.putExtra("id", id);
 
 
-                bar.dismiss();
-                recyclerView.setAdapter(adapter);
-                //Picasso.with(getApplicationContext()).load(sourceList.sources.get(5).getUrlsToLogos().getSmall()).into(img);
-                //recyclerView.setAdapter(new SourceAdapter(sourceList.sources,R.layout.sources,getApplicationContext()));
-                Log.d("tag", "on Response " + statuscode);
+                            startActivity(intent);
+                        }
+                    });
+                    bar.dismiss();
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Toast.makeText(MainActivity.this, "Unable to fetch information " + response.code(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(Call<SourceList>call, Throwable t) {
-                // Log error here since request failed
+            public void onFailure(Call<SourceList> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Unable to fetch information ", Toast.LENGTH_SHORT).show();
                 Log.d("fail", "on Response " + t.getMessage());
             }
         });
-        /*
-
-
-
-*/
-    }
-/*
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Toast.makeText(this, "Saving", Toast.LENGTH_SHORT).show();
-        mListState = mLayoutManager.onSaveInstanceState();
-        outState.putParcelable("myState",mListState);
 
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedState) {
-        super.onRestoreInstanceState(savedState);
-        Toast.makeText(this, "Restore", Toast.LENGTH_SHORT).show();
-        if(savedState != null)
-        {
-            mListState = savedState.getParcelable("myState");
-        }
-
-
+    protected void onPause() {
+        super.onPause();
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(this, "Resume", Toast.LENGTH_SHORT).show();
-
-
-        if (mListState != null) {
-            Toast.makeText(this,"no null "+ mListState.toString(),Toast.LENGTH_SHORT).show();
-            mLayoutManager.onRestoreInstanceState(mListState);
-        }
-    }
-*/
-@Override
-protected void onPause()
-{
-    super.onPause();
-
-    // save RecyclerView state
-    mBundleRecyclerViewState = new Bundle();
-    //Toast.makeText(this,"onpause",Toast.LENGTH_SHORT).show();
-    Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
-    mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
-
-}
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        //Toast.makeText(this,"onresume",Toast.LENGTH_SHORT).show();
-
-        // restore RecyclerView state
         if (mBundleRecyclerViewState != null) {
             Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
             recyclerView.getLayoutManager().onRestoreInstanceState(listState);
@@ -212,8 +133,8 @@ protected void onPause()
     @Override
     public void onItemClick(String id) {
         adapter.setItemClickCallback(this);
-        Intent intent =new Intent(this,News.class);
-        intent.putExtra("id",id);
+        Intent intent = new Intent(this, News.class);
+        intent.putExtra("id", id);
         //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
@@ -226,6 +147,7 @@ protected void onPause()
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -239,6 +161,6 @@ protected void onPause()
                 break;
 
         }
-return true;
+        return true;
     }
 }
