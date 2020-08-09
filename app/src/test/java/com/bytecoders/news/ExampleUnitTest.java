@@ -1,4 +1,4 @@
-package com.applications.kabarkhodu.news;
+package com.bytecoders.news;
 
 import org.junit.Test;
 

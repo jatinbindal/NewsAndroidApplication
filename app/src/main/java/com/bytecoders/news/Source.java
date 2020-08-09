@@ -1,4 +1,4 @@
-package com.applications.kabarkhodu.news;
+package com.bytecoders.news;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
