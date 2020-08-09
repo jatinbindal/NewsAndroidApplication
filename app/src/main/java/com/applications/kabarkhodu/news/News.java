@@ -8,7 +8,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -44,6 +46,8 @@ public class News extends AppCompatActivity implements ArticleAdapter.ItemClickC
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
+        LinearSnapHelper linearSnapHelper = new SnapHelperOneByOne();
+        linearSnapHelper.attachToRecyclerView(recyclerView);
         bar = new ProgressDialog(this);
         bar.setMessage("Getting Latest News");
         final Context c = this;
@@ -127,3 +131,39 @@ public class News extends AppCompatActivity implements ArticleAdapter.ItemClickC
         return true;
     }
 }
+class SnapHelperOneByOne extends LinearSnapHelper {
+
+    @Override
+    public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
+
+        if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
+            return RecyclerView.NO_POSITION;
+        }
+
+        final View currentView = findSnapView(layoutManager);
+
+        if (currentView == null) {
+            return RecyclerView.NO_POSITION;
+        }
+
+        LinearLayoutManager myLayoutManager = (LinearLayoutManager) layoutManager;
+
+        int position1 = myLayoutManager.findFirstVisibleItemPosition();
+        int position2 = myLayoutManager.findLastVisibleItemPosition();
+
+        int currentPosition = layoutManager.getPosition(currentView);
+
+        if (velocityX > 400) {
+            currentPosition = position2;
+        } else if (velocityX < 400) {
+            currentPosition = position1;
+        }
+
+        if (currentPosition == RecyclerView.NO_POSITION) {
+            return RecyclerView.NO_POSITION;
+        }
+
+        return currentPosition;
+    }
+}
+
