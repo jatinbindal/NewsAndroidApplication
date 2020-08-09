@@ -16,9 +16,6 @@ public class Source {
     @SerializedName("url")
     @Expose
     private String url;
-    @SerializedName("urlsToLogos")
-    @Expose
-    private UrlToLogos urlsToLogos;
 
     public Source() {
 
@@ -39,15 +36,7 @@ public class Source {
     public void setUrl(String url) {
         this.url = url;
     }
-/*
-    public String getUrlToLogos() {
-        return urlToLogos;
-    }
 
-    public void setUrlToLogos(String urlToLogos) {
-        this.urlToLogos = urlToLogos;
-    }
-*/
     public String getName() {
         return name;
     }
@@ -56,22 +45,8 @@ public class Source {
         this.name = name;
     }
 
-    public UrlToLogos getUrlsToLogos() {
-        return urlsToLogos;
-    }
 
-    public void setUrlsToLogos(UrlToLogos urlsToLogos) {
-        this.urlsToLogos = urlsToLogos;
-    }
-/*
-    public String getUrlToLogos() {
-        return urlToLogos;
-    }
 
-    public void setUrlToLogos(String urlToLogos) {
-        this.urlToLogos = urlToLogos;
-    }
-    */
 }
 
 

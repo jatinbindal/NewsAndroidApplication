@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="#FFFFFF"
+        android:background="@color/cardview_light_background"
         android:backgroundTint="@color/cardview_light_background"
         card_view:cardCornerRadius="30px">
 
@@ -58,7 +58,7 @@
                         android:textSize="15dp"
                         android:textStyle="bold" />
 
-                    <TextVi0ew
+                    <TextView
                         android:id="@+id/article_description"
 
                         android:layout_width="wrap_content"

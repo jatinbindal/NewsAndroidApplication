@@ -27,11 +27,7 @@ public class News extends AppCompatActivity implements ArticleAdapter.ItemClickC
 
     private RecyclerView recyclerView;
     private ArticleAdapter adapter;
-    //private SourceAdapter adapter;
-    TextView text;
-    ImageView img;
-    private static final String apiKey = "a6580ddc35504d7fad7244f65e3c0977";
-    //private  static final String s="the-next-web";
+    private String apiKey;
 
     ProgressDialog bar;
 
@@ -41,16 +37,12 @@ public class News extends AppCompatActivity implements ArticleAdapter.ItemClickC
         setContentView(R.layout.activity_news);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        apiKey  = getString(R.string.api_key);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(false);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        //text= (TextView) findViewById(R.id.check);
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         bar = new ProgressDialog(this);
         bar.setMessage("Getting Latest News");
@@ -61,43 +53,35 @@ public class News extends AppCompatActivity implements ArticleAdapter.ItemClickC
                 ApiClient.getClient().create(ApiInterface.class);
 
         Bundle bundle = getIntent().getExtras();
-        String source = bundle.getString("id");
-        Toast.makeText(this, "hello " + source, Toast.LENGTH_SHORT).show();
-        //
-        // text.setText(source);
+        final String source = bundle.getString("id");
         setTitle(source);
-
         Call<ArticleList> call = apiService.loadArticles(source, apiKey);
-        //text.setText(call.request().url().toString());
-        // Response<SourceList> response =call.execute();
         call.enqueue(new Callback<ArticleList>() {
             @Override
             public void onResponse(Call<ArticleList> call, Response<ArticleList> response) {
-                int statuscode = response.code();
-                //SourceList sourceList=new SourceList();
-                ArticleList articleList = response.body();
-                //text.setText("hello");
-                //text.setText(sourceList.sources.get(5).getName());
+                if (response.code() == 200) {
+                    ArticleList articleList = response.body();
 
-                adapter = new ArticleAdapter(articleList.getArticles(), getApplicationContext());
-                adapter.setItemClickCallback(new ArticleAdapter.ItemClickCallback() {
-                    @Override
-                    public void onItemClick(String url) {
 
-                        adapter.setItemClickCallback(this);
-                        Intent intent = new Intent(getApplicationContext(), FullNews.class);
-                        intent.putExtra("url", url);
-                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                });
+                    adapter = new ArticleAdapter(articleList.getArticles(), getApplicationContext());
+                    adapter.setItemClickCallback(new ArticleAdapter.ItemClickCallback() {
+                        @Override
+                        public void onItemClick(String url) {
 
-                bar.dismiss();
+                            adapter.setItemClickCallback(this);
+                            Intent intent = new Intent(getApplicationContext(), FullNews.class);
+                            intent.putExtra("url", url);
+                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                        }
+                    });
 
-                recyclerView.setAdapter(adapter);
+                    bar.dismiss();
 
-                //Picasso.with(getApplicationContext()).load(sourceList.sources.get(5).getUrlsToLogos().getSmall()).into(img);
-                //recyclerView.setAdapter(new SourceAdapter(sourceList.sources,R.layout.sources,getApplicationContext()));
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Toast.makeText(News.this, "Unable to get article" + response.code(), Toast.LENGTH_SHORT).show();
+                }
                 Log.d("tag", "on Response " + call.request().url());
             }
 
@@ -139,8 +123,6 @@ public class News extends AppCompatActivity implements ArticleAdapter.ItemClickC
                 finish();
                 startActivity(intent);
                 break;
-
-
         }
         return true;
     }

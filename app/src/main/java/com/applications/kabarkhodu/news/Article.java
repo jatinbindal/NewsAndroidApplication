@@ -6,9 +6,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by my computer on 10/29/2016.
  */
-public class Article
-
-{
+public class Article {
     @SerializedName("author")
     @Expose
     private String author;
@@ -29,108 +27,84 @@ public class Article
     private String publishedAt;
 
     /**
-     *
-     * @return
-     * The author
+     * @return The author
      */
     public String getAuthor() {
         return author;
     }
 
     /**
-     *
-     * @param author
-     * The author
+     * @param author The author
      */
     public void setAuthor(String author) {
         this.author = author;
     }
 
     /**
-     *
-     * @return
-     * The title
+     * @return The title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     *
-     * @param title
-     * The title
+     * @param title The title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     *
-     * @return
-     * The description
+     * @return The description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     *
-     * @param description
-     * The description
+     * @param description The description
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     *
-     * @return
-     * The url
+     * @return The url
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     *
-     * @param url
-     * The url
+     * @param url The url
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
-     *
-     * @return
-     * The urlToImage
+     * @return The urlToImage
      */
     public String getUrlToImage() {
         return urlToImage;
     }
 
     /**
-     *
-     * @param urlToImage
-     * The urlToImage
+     * @param urlToImage The urlToImage
      */
     public void setUrlToImage(String urlToImage) {
         this.urlToImage = urlToImage;
     }
 
     /**
-     *
-     * @return
-     * The publishedAt
+     * @return The publishedAt
      */
     public String getPublishedAt() {
         return publishedAt;
     }
 
     /**
-     *
-     * @param publishedAt
-     * The publishedAt
+     * @param publishedAt The publishedAt
      */
     public void setPublishedAt(String publishedAt) {
         this.publishedAt = publishedAt;

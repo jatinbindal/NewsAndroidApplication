@@ -1,8 +1,5 @@
  package com.applications.kabarkhodu.news;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -20,8 +17,6 @@ public class SourceList{
     @Expose
     List<Source> sources=new ArrayList<Source>();
 
-
-
     public static SourceList parseJSON(String response) {
         Gson gson = new GsonBuilder().create();
         SourceList sourceList = gson.fromJson(response, SourceList.class);
@@ -30,7 +25,6 @@ public class SourceList{
 
     public List<Source> getResults()
     {
-
         return this.sources;
     }
 
