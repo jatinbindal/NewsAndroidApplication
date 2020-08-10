@@ -1,4 +1,4 @@
-package com.applications.kabarkhodu.news;
+package com.bytecoders.news;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -6,14 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,18 +77,16 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         holder.title.setText(article.getTitle());
         holder.des.setText(article.getDescription());
         holder.url = article.getUrl();
-        if (article.getAuthor() == null)
+        if (article.getAuthor() == null || article.getAuthor().isEmpty() )
             holder.author.setText("--By Anonymous!");
         else
             holder.author.setText("--By " + article.getAuthor());
-        Context context = holder.img.getContext();
-        Picasso.with(context).load(article.getUrlToImage()).into(holder.img);
+        Picasso.get().load(article.getUrlToImage()).into(holder.img);
 
     }
 
     @Override
     public int getItemCount() {
-
         return articles.size();
     }
 }

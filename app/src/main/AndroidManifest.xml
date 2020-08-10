@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.applications.kabarkhodu.news" >
+    package="com.bytecoders.news" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.bytecoders.news.MainActivity"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,23 +22,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".News"
+            android:name="com.bytecoders.news.News"
             android:label="@string/title_activity_news"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.bytecoders.news.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applications.kabarkhodu.news.MainActivity" />
+                android:value="com.bytecoders.news.MainActivity" />
         </activity>
         <activity
-            android:name=".FullNews"
+            android:name="com.bytecoders.news.FullNews"
             android:label="@string/title_activity_full_news"
-            android:parentActivityName=".News"
+            android:parentActivityName="com.bytecoders.news.News"
             android:theme="@style/AppTheme.NoActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applications.kabarkhodu.news.News" />
+                android:value="com.bytecoders.news.News" />
         </activity>
     </application>
 
