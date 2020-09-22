@@ -81,7 +81,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
             holder.author.setText("--By Anonymous!");
         else
             holder.author.setText("--By " + article.getAuthor());
-        Picasso.get().load(article.getUrlToImage()).into(holder.img);
+        if(article.getUrlToImage()!=null && !article.getUrlToImage().isEmpty())
+            Picasso.get().load(article.getUrlToImage()).into(holder.img);
+        else
+            Picasso.get().load(R.drawable.notfound).into(holder.img);
+
 
     }
 
